@@ -1,0 +1,6 @@
+homepage: "https://www.actionspeak.kr/"
+documentation: "https://github.com/action-speak/gtm-template/blob/main/README.md"
+versions:
+  - sha: 5e3bdd3be4bef7971103c36e52461e7a4230bc6f
+    changeNotes: Initial Version
+
