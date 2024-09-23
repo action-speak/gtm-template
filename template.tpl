@@ -147,28 +147,40 @@ const copyFromWindow = require('copyFromWindow');
 const setInWindow = require('setInWindow');
 const logToConsole = require('logToConsole');
 const makeInteger = require('makeInteger');
+const callLater = require('callLater');
 
-let actionSpeak;
-
-actionSpeak = copyFromWindow('actionSpeak');
-if (!actionSpeak) {
-  setInWindow('actionSpeak', {});
+function waitForActionSpeak(callback) {
+  const actionSpeak = copyFromWindow('actionSpeak');
+  if (actionSpeak && actionSpeak.isReady) {
+    callback();
+  } else {
+    callLater(function() {
+      waitForActionSpeak(callback);
+    });
+  }
 }
 
-switch(data.popupType) {
-  case 'toast':
-    showToast();
-    break;
-  case 'basicPopup':
-    showBasicPopup();
-    break;
-  case 'macWindowPopup':
-    showMacWindowPopup();
-    break;
+function initializeActionSpeak() {
+  let actionSpeak = copyFromWindow('actionSpeak');
+  if (!actionSpeak) {
+    setInWindow('actionSpeak', {});
+  }
+  
+  switch(data.popupType) {
+    case 'toast':
+      showToast();
+      break;
+    case 'basicPopup':
+      showBasicPopup();
+      break;
+    case 'macWindowPopup':
+      showMacWindowPopup();
+      break;
+  }
 }
 
 function showToast() {
-  actionSpeak.showToast({
+  copyFromWindow('actionSpeak').showToast({
     title: data.title,
     description: data.description,
     link: data.link,
@@ -184,7 +196,7 @@ function showToast() {
 }
 
 function showBasicPopup() {
-  actionSpeak.showBasicPopup({
+  copyFromWindow('actionSpeak').showBasicPopup({
     title: data.title,
     description: data.description,
     imageName: data.imageName,
@@ -202,7 +214,7 @@ function showBasicPopup() {
 }
 
 function showMacWindowPopup() {
-  actionSpeak.showMacWindowPopup({
+  copyFromWindow('actionSpeak').showMacWindowPopup({
     title: data.title,
     link: data.link,
     imageName: data.imageName,
@@ -214,7 +226,7 @@ function showMacWindowPopup() {
   });
 }
 
-
+waitForActionSpeak(initializeActionSpeak);
 
 data.gtmOnSuccess();
 
