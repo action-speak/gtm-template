@@ -203,7 +203,7 @@ function showBasicPopup() {
     button: {
       label: data.buttonLabel,
       link: data.link,
-      timeLimite: data.timeLimit
+      timeLimit: data.timeLimit
     },
     options: {
       waitFor: makeInteger(data.waitFor) * 1000,
@@ -327,5 +327,3 @@ scenarios: []
 ___NOTES___
 
 Created on 2024. 7. 2. 오후 2:04:57
-
-
