@@ -90,7 +90,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "buttonLabel",
-    "displayName": "버튼 명 (기본 팝업)",
+    "displayName": "버튼 명",
     "simpleValueType": true,
     "enablingConditions": [
       {
@@ -108,27 +108,9 @@ ___TEMPLATE_PARAMETERS___
     "valueHint": "https://example.com"
   },
   {
-    "type": "CHECKBOX",
-    "name": "timeLimit",
-    "checkboxText": "제한 시간 표시",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "popupType",
-        "paramValue": "toast",
-        "type": "EQUALS"
-      },
-      {
-        "paramName": "popupType",
-        "paramValue": "basicPopup",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
     "type": "SELECT",
     "name": "position",
-    "displayName": "표시할 위치",
+    "displayName": "표시할 위치 (푸시 팝업)",
     "selectItems": [
       {
         "value": "bottom",
@@ -150,10 +132,38 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "TEXT",
+    "name": "duration",
+    "displayName": "노출 시간 (선택: 미 입력시 영구 노출)",
+    "simpleValueType": true,
+    "defaultValue": 5,
+    "valueUnit": "초",
+    "help": "팝업이 노출을 유지하는 시간"
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "timeLimit",
+    "checkboxText": "제한 시간 표시",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "popupType",
+        "paramValue": "toast",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "popupType",
+        "paramValue": "basicPopup",
+        "type": "EQUALS"
+      }
+    ],
+    "help": "팝업의 남은 시간을 보여줄지 여부"
+  },
+  {
+    "type": "TEXT",
     "name": "frequency",
     "displayName": "노출 빈도 (필수)",
     "simpleValueType": true,
-    "help": "사용자에게 최대 노출하는 횟수입니다.",
+    "help": "동일 사용자에게 노출하는 횟수",
     "defaultValue": 2
   },
   {
@@ -163,17 +173,8 @@ ___TEMPLATE_PARAMETERS___
     "simpleValueType": true,
     "valueHint": "100",
     "defaultValue": 1,
-    "help": "태그가 발동하고 팝업이 보여지는 사이의 시간입니다. (ms)",
+    "help": "태그가 발동하고 팝업이 보여지는 사이의 시간",
     "valueUnit": "초"
-  },
-  {
-    "type": "TEXT",
-    "name": "duration",
-    "displayName": "노출 시간 (선택: 미 입력시 영구 노출)",
-    "simpleValueType": true,
-    "defaultValue": 5,
-    "valueUnit": "초",
-    "help": "팝업이 노출을 유지하는 시간입니다."
   }
 ]
 
@@ -185,28 +186,40 @@ const copyFromWindow = require('copyFromWindow');
 const setInWindow = require('setInWindow');
 const logToConsole = require('logToConsole');
 const makeInteger = require('makeInteger');
+const callLater = require('callLater');
 
-let actionSpeak;
-
-actionSpeak = copyFromWindow('actionSpeak');
-if (!actionSpeak) {
-  setInWindow('actionSpeak', {});
+function waitForActionSpeak(callback) {
+  const actionSpeak = copyFromWindow('actionSpeak');
+  if (actionSpeak && actionSpeak.isReady) {
+    callback();
+  } else {
+    callLater(function() {
+      waitForActionSpeak(callback);
+    });
+  }
 }
 
-switch(data.popupType) {
-  case 'toast':
-    showToast();
-    break;
-  case 'basicPopup':
-    showBasicPopup();
-    break;
-  case 'macWindowPopup':
-    showMacWindowPopup();
-    break;
+function initializeActionSpeak() {
+  let actionSpeak = copyFromWindow('actionSpeak');
+  if (!actionSpeak) {
+    setInWindow('actionSpeak', {});
+  }
+  
+  switch(data.popupType) {
+    case 'toast':
+      showToast();
+      break;
+    case 'basicPopup':
+      showBasicPopup();
+      break;
+    case 'macWindowPopup':
+      showMacWindowPopup();
+      break;
+  }
 }
 
 function showToast() {
-  actionSpeak.showToast({
+  copyFromWindow('actionSpeak').showToast({
     title: data.title,
     description: data.description,
     link: data.link,
@@ -222,14 +235,14 @@ function showToast() {
 }
 
 function showBasicPopup() {
-  actionSpeak.showBasicPopup({
+  copyFromWindow('actionSpeak').showBasicPopup({
     title: data.title,
     description: data.description,
     imageName: data.imageName,
     button: {
       label: data.buttonLabel,
       link: data.link,
-      timeLimite: data.timeLimit
+      timeLimit: data.timeLimit
     },
     options: {
       waitFor: makeInteger(data.waitFor) * 1000,
@@ -240,7 +253,7 @@ function showBasicPopup() {
 }
 
 function showMacWindowPopup() {
-  actionSpeak.showMacWindowPopup({
+  copyFromWindow('actionSpeak').showMacWindowPopup({
     title: data.title,
     link: data.link,
     imageName: data.imageName,
@@ -252,7 +265,7 @@ function showMacWindowPopup() {
   });
 }
 
-
+waitForActionSpeak(initializeActionSpeak);
 
 data.gtmOnSuccess();
 
