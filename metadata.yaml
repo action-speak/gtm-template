@@ -1,6 +1,8 @@
 homepage: "https://www.actionspeak.kr/"
 documentation: "https://github.com/action-speak/gtm-template/blob/main/README.md"
 versions:
+  - sha: b3decd1829905934aef80d943c89880dc3cfc6f1
+    changeNotes: Update template.tpl  
   - sha: 77de4a796563696b8a2bcf494351dfc73547ead5
     changeNotes: Update template.tpl
   - sha: 0e88da361bb830b874a04ee8df6f6409a1cc176c
