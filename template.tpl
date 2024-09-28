@@ -64,9 +64,21 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "description",
-    "displayName": "본문 (푸시 팝업, 기본 팝업)",
+    "displayName": "본문",
     "simpleValueType": true,
-    "canBeEmptyString": false
+    "canBeEmptyString": false,
+    "enablingConditions": [
+      {
+        "paramName": "popupType",
+        "paramValue": "toast",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "popupType",
+        "paramValue": "basicPopup",
+        "type": "EQUALS"
+      }
+    ]
   },
   {
     "type": "TEXT",
@@ -79,7 +91,14 @@ ___TEMPLATE_PARAMETERS___
     "type": "TEXT",
     "name": "buttonLabel",
     "displayName": "버튼 명 (기본 팝업)",
-    "simpleValueType": true
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "popupType",
+        "paramValue": "basicPopup",
+        "type": "EQUALS"
+      }
+    ]
   },
   {
     "type": "TEXT",
@@ -91,13 +110,25 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "CHECKBOX",
     "name": "timeLimit",
-    "checkboxText": "제한 시간 표시 (푸시 팝업, 기본 팝업)",
-    "simpleValueType": true
+    "checkboxText": "제한 시간 표시",
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "popupType",
+        "paramValue": "toast",
+        "type": "EQUALS"
+      },
+      {
+        "paramName": "popupType",
+        "paramValue": "basicPopup",
+        "type": "EQUALS"
+      }
+    ]
   },
   {
     "type": "SELECT",
     "name": "position",
-    "displayName": "표시할 위치 (푸시 팝업)",
+    "displayName": "표시할 위치",
     "selectItems": [
       {
         "value": "bottom",
@@ -108,7 +139,14 @@ ___TEMPLATE_PARAMETERS___
         "displayValue": "상단"
       }
     ],
-    "simpleValueType": true
+    "simpleValueType": true,
+    "enablingConditions": [
+      {
+        "paramName": "popupType",
+        "paramValue": "toast",
+        "type": "EQUALS"
+      }
+    ]
   },
   {
     "type": "TEXT",
@@ -147,40 +185,28 @@ const copyFromWindow = require('copyFromWindow');
 const setInWindow = require('setInWindow');
 const logToConsole = require('logToConsole');
 const makeInteger = require('makeInteger');
-const callLater = require('callLater');
 
-function waitForActionSpeak(callback) {
-  const actionSpeak = copyFromWindow('actionSpeak');
-  if (actionSpeak && actionSpeak.isReady) {
-    callback();
-  } else {
-    callLater(function() {
-      waitForActionSpeak(callback);
-    });
-  }
+let actionSpeak;
+
+actionSpeak = copyFromWindow('actionSpeak');
+if (!actionSpeak) {
+  setInWindow('actionSpeak', {});
 }
 
-function initializeActionSpeak() {
-  let actionSpeak = copyFromWindow('actionSpeak');
-  if (!actionSpeak) {
-    setInWindow('actionSpeak', {});
-  }
-  
-  switch(data.popupType) {
-    case 'toast':
-      showToast();
-      break;
-    case 'basicPopup':
-      showBasicPopup();
-      break;
-    case 'macWindowPopup':
-      showMacWindowPopup();
-      break;
-  }
+switch(data.popupType) {
+  case 'toast':
+    showToast();
+    break;
+  case 'basicPopup':
+    showBasicPopup();
+    break;
+  case 'macWindowPopup':
+    showMacWindowPopup();
+    break;
 }
 
 function showToast() {
-  copyFromWindow('actionSpeak').showToast({
+  actionSpeak.showToast({
     title: data.title,
     description: data.description,
     link: data.link,
@@ -196,14 +222,14 @@ function showToast() {
 }
 
 function showBasicPopup() {
-  copyFromWindow('actionSpeak').showBasicPopup({
+  actionSpeak.showBasicPopup({
     title: data.title,
     description: data.description,
     imageName: data.imageName,
     button: {
       label: data.buttonLabel,
       link: data.link,
-      timeLimit: data.timeLimit
+      timeLimite: data.timeLimit
     },
     options: {
       waitFor: makeInteger(data.waitFor) * 1000,
@@ -214,7 +240,7 @@ function showBasicPopup() {
 }
 
 function showMacWindowPopup() {
-  copyFromWindow('actionSpeak').showMacWindowPopup({
+  actionSpeak.showMacWindowPopup({
     title: data.title,
     link: data.link,
     imageName: data.imageName,
@@ -226,7 +252,7 @@ function showMacWindowPopup() {
   });
 }
 
-waitForActionSpeak(initializeActionSpeak);
+
 
 data.gtmOnSuccess();
 
@@ -327,3 +353,5 @@ scenarios: []
 ___NOTES___
 
 Created on 2024. 7. 2. 오후 2:04:57
+
+
