@@ -38,7 +38,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "SELECT",
     "name": "popupType",
-    "displayName": "팝업 유형 (필수)",
+    "displayName": "팝업 유형",
     "selectItems": [
       {
         "value": "toast",
@@ -58,7 +58,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "title",
-    "displayName": "제목 (필수)",
+    "displayName": "제목",
     "simpleValueType": true
   },
   {
@@ -83,7 +83,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "imageName",
-    "displayName": "이미지 이름 (필수)",
+    "displayName": "이미지 이름",
     "simpleValueType": true,
     "help": "대시보드에서 등록한 이미지의 고유한 이름을 입력해주세요."
   },
@@ -103,14 +103,14 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "link",
-    "displayName": "이동 링크 (선택)",
+    "displayName": "링크",
     "simpleValueType": true,
     "valueHint": "https://example.com"
   },
   {
     "type": "SELECT",
     "name": "position",
-    "displayName": "표시할 위치 (푸시 팝업)",
+    "displayName": "위치",
     "selectItems": [
       {
         "value": "bottom",
@@ -133,11 +133,11 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "duration",
-    "displayName": "노출 시간 (선택: 미 입력시 영구 노출)",
+    "displayName": "지속 시간 (미 입력시 영구 노출)",
     "simpleValueType": true,
     "defaultValue": 5,
     "valueUnit": "초",
-    "help": "팝업이 노출을 유지하는 시간"
+    "help": "팝업이 화면에 표시되는 시간"
   },
   {
     "type": "CHECKBOX",
@@ -161,7 +161,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "frequency",
-    "displayName": "노출 빈도 (필수)",
+    "displayName": "빈도",
     "simpleValueType": true,
     "help": "동일 사용자에게 노출하는 횟수",
     "defaultValue": 2
@@ -169,11 +169,11 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "TEXT",
     "name": "waitFor",
-    "displayName": "노출 지연 (필수)",
+    "displayName": "\b대기 시간",
     "simpleValueType": true,
     "valueHint": "100",
     "defaultValue": 1,
-    "help": "태그가 발동하고 팝업이 보여지는 사이의 시간",
+    "help": "팝업이 표시되기 전 대기 시간",
     "valueUnit": "초"
   }
 ]
@@ -366,5 +366,3 @@ scenarios: []
 ___NOTES___
 
 Created on 2024. 7. 2. 오후 2:04:57
-
-
