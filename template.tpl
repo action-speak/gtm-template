@@ -175,6 +175,12 @@ ___TEMPLATE_PARAMETERS___
     "defaultValue": 1,
     "help": "팝업이 표시되기 전 대기 시간",
     "valueUnit": "초"
+  },
+  {
+    "type": "CHECKBOX",
+    "name": "abTest",
+    "checkboxText": "A/B 테스트",
+    "simpleValueType": true
   }
 ]
 
@@ -231,6 +237,7 @@ function showToast() {
       duration: makeInteger(data.duration) * 1000,
       frequency: makeInteger(data.frequency) || 1
     },
+    abTest: data.abTest
   });
 }
 
@@ -248,7 +255,8 @@ function showBasicPopup() {
       waitFor: makeInteger(data.waitFor) * 1000,
       duration: makeInteger(data.duration) * 1000,
       frequency: makeInteger(data.frequency) || 1
-    }
+    },
+    abTest: data.abTest
   });
 }
 
@@ -261,7 +269,8 @@ function showMacWindowPopup() {
       waitFor: makeInteger(data.waitFor) * 1000,
       duration: makeInteger(data.duration) * 1000,
       frequency: makeInteger(data.frequency) || 1
-    }
+    },
+    abTest: data.abTest
   });
 }
 
